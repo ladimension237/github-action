@@ -1,34 +1,57 @@
-name: Demo pipeline 
+name: Demo pipeline
+
 on:
   push:
-    branches: 
+    branches:
       - main
       - dev
   pull_request:
     branches: [main, dev]
   #schedule:
-   # - cron:  "*/1 * * * *"
+   # - cron: '0 0 * * 0'
+
+
 jobs:
+
   setup_job:
-    runs-on: ubuntu-latest  # macos-latest , windows-latest 
-    steps:                                                                              
-      - uses: actions/checkout@v3 
-      - name: create file 
-        run: touch github-action.txt
-      - name: print hello world
-        run: echo Hello world
-      - name: display readme file
-        run: cat README.md
-  build_job:
-    needs:
-       - setup_job
-       - deploy_job
-    runs-on: windows-latest
+    runs-on: ubuntu-latest #macos-latest, windows-latest
     steps:
-      - name: display hello
-        run: echo hello 
+      - name: Check out repository
+        uses: actions/checkout@v3
+
+      - name: create a file
+        run: |
+         touch github_action_file.txt
+         echo "from first job" > github-action.txt
+         ls-la
+         echo Hello world
+         cat README.md
+      - name: upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: my-file
+          path: github-action.txt  
+
+  buil_job:
+    needs: 
+      - setup_job
+    runs-on: ubuntu-latest
+    steps:
+      - name: Display hello
+        run: echo Hello world
+      - uses: actions/download-artifact@v4
+        with:
+          name: my-file
+      - name: Display file content
+        run: cat github-action.txt    
+
   deploy_job:
-    needs: setup_job
+    needs: buil_job
     runs-on: macos-latest
     steps:
-      - run: echo hellow mac
+      - run: echo "hello macos"    
+
+
+
+  
+  

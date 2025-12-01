@@ -21,8 +21,8 @@ jobs:
 
       - name: create a file
         run: |
-         touch github_action_file.txt
-         echo "from first job" > github-action.txt
+         touch github-action.txt
+         echo from first job > github-action.txt
          ls -la
          echo Hello world
          cat README.md

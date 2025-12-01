@@ -23,7 +23,7 @@ jobs:
         run: |
          touch github_action_file.txt
          echo "from first job" > github-action.txt
-         ls-la
+         ls -la
          echo Hello world
          cat README.md
       - name: upload artifact
